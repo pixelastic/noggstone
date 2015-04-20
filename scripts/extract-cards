@@ -1,0 +1,73 @@
+#!/usr/bin/env ruby
+require_relative './hearthstone-helper'
+require 'nokogiri'
+
+class ExtractCards
+  include HearthstoneHelper
+  def initialize
+    import_from_unity(:src => 'cardxml0.unity3d', :inner_path => 'CAB-cardxml0/TextAsset/enUS.txt', :dest => 'cards.xml')
+  end
+
+  def get_all_raw_cards
+    file = File.open(tmp_path('cards.xml'))
+    document = Nokogiri::XML(file)
+    file.close
+    return document
+  end
+
+  def get_tag_enum_value(tag)
+    # enumID type taken from
+    # https://github.com/jamsyoung/hearthstone-api/blob/master/scripts/create-json.js
+    number_enum = [45, 47, 48, 183, 187, 199, 200, 201, 202, 203, 215, 251, 268, 330, 331 ]
+    boolean_enum = [ 32, 114, 189, 190, 191, 192, 194, 197, 205, 208, 212, 217, 218, 219, 220, 293, 321, 335, 338, 339, 349, 350, 355, 361, 362, 363, 367, 370 ]
+    string_enum = [ 184, 185, 252, 325, 342, 351, 364, 365 ]
+
+    if number_enum.include? tag['enumID'].to_i
+      return tag['value'].to_i
+    end
+    if boolean_enum.include? tag['enumID'].to_i
+      return tag['value'] == '1'
+    end
+    if string_enum.include? tag['enumID'].to_i
+      return tag.content
+    end
+
+    return tag['value']
+  end
+
+  def add_enum_tag_to_card(card: nil, tag: nil)
+    enumID = tag['enumID']
+    readableType = @@config['knownEnumID'][enumID]
+    # Do nothing if unknown type
+    return card if !readableType
+
+    card[readableType] = get_tag_enum_value(tag)
+    return card
+  end
+
+  def get_all_cards
+    raw = get_all_raw_cards
+
+    cards = []
+
+    raw.xpath('//Entity').each do |entity|
+      card = {
+        :id => entity['CardID'],
+      }
+      entity.css('Tag').each do |tag|
+        card = add_enum_tag_to_card(:card => card, :tag => tag)
+      end
+      cards << card
+    end
+    return cards
+  end
+
+  def run
+    cards = get_all_cards
+    dist_path = File.join(@@config['distPath'], 'cards.json')
+    File.open(dist_path, 'w') do |file| 
+      file.write(JSON.pretty_generate(cards))
+    end
+  end
+end
+ExtractCards.new(*ARGV).run()
