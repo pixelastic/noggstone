@@ -1,0 +1,15 @@
+*.crcdownload
+*.orig
+*~
+.*.sw[a-z]
+.DS_Store
+.hg
+.hgignore
+.sass-cache
+.svn
+Thumbs.db
+__pycache__
+bower_components
+node_modules
+nohup.out
+tmp
