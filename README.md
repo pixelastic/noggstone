@@ -16,4 +16,5 @@ install files, given by a friend.
 Thanks to the following repositories and tools.
 
 - https://github.com/jamsyoung/hearthstone-api
+- https://github.com/Sembiance/hearthstonejson
 - https://github.com/ata4/disunity
