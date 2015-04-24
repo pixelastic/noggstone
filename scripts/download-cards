@@ -1,0 +1,45 @@
+#!/usr/bin/env ruby
+require_relative './hearthstone-helper'
+require 'fileutils'
+require 'json'
+# I haven't found a way to create the card pictures from the game files yet.
+# I have found all game pictures, but can't find an automated way to link them
+# to a known cardID. And then I'll have the issue of generating the final
+# pictures by assembling all parts.
+# For the moment, it is much easier to simply download the files from
+# hearthead.
+
+class DownloadCardPictures
+  include HearthstoneHelper
+  def initialize
+    @picture_folder = File.join(@@config['distPath'], 'pictures')
+  end
+
+  def get_all_ids
+    raw = JSON.parse(File.read(File.join(@@config['distPath'], 'cards.json')))
+    raw.map! do |card|
+      card['id']
+    end
+  end
+
+  def create_picture_folder
+    FileUtils.mkdir_p(@picture_folder)
+  end
+
+  def download_picture(id)
+    output = File.join(@picture_folder, "#{id}.png")
+    options = [
+      "http://wow.zamimg.com/images/hearthstone/cards/enus/original/#{id}.png",
+      "-O '#{output}'"
+    ]
+    system("wget #{options.join(' ')}")
+  end
+
+  def run
+    create_picture_folder
+    get_all_ids.each do |id|
+      download_picture id
+    end
+  end
+end
+DownloadCardPictures.new(*ARGV).run()

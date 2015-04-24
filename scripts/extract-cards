@@ -57,6 +57,8 @@ class ExtractCards
       entity.css('Tag').each do |tag|
         card = add_enum_tag_to_card(:card => card, :tag => tag)
       end
+      # Keep only "real" cards
+      next if !card['Collectible']
       cards << card
     end
     return cards
