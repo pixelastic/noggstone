@@ -35,10 +35,16 @@ class DownloadCardPictures
     system("wget #{options.join(' ')}")
   end
 
+  def crop_picture(id)
+    input = File.join(@picture_folder, "#{id}.png")
+    system("mogrify -trim '#{input}'")
+  end
+
   def run
     create_picture_folder
     get_all_ids.each do |id|
       download_picture id
+      crop_picture id
     end
   end
 end
