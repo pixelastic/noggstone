@@ -49,23 +49,32 @@ module HearthstoneHelper
 
   # Extract a file from a unity3d file to our tmp directory.
   def import_from_unity(src: nil, inner_path: nil, dest: nil)
+    dest = File.expand_path(tmp_path(dest))
     # If the unity3d file in tmp is the same as in root, no need to extract
     # anything
-    if files_equal?(data_path(src), tmp_path(src))
-      puts "✘ #{src} already in ./tmp, skipping"
-      return
-    end
+    # if files_equal?(data_path(src), tmp_path(src))
+    #   puts "✘ #{src} already in ./tmp, skipping"
+    #   return
+    # end
 
-    # Import the unity3d source file
-    import_from_root(:src => src)
 
     # Extract all the content
     disunity_extract(:src => src)
 
-    # Move the selected file to tmp
-    extracted_dir = tmp_path(File.basename(src, File.extname(src)))
-    extracted_file = File.join(extracted_dir, inner_path)
-    final_file = File.expand_path(tmp_path(dest))
-    FileUtils.mv(extracted_file, final_file)
+    # Getting only files matching the glob pattern
+    basename = File.basename(src, File.extname(src))
+    glob = File.join(@@config['tmpPath'], basename, inner_path)
+    p glob
+    files = Dir[glob]
+    puts files
+
+    if files.size == 1
+      FileUtils.mv(files[0], dest)
+    else
+      FileUtils.mkdir_p(dest)
+      files.each do |file|
+        FileUtils.mv(file, dest)
+      end
+    end
   end
 end

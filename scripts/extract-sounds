@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+require_relative './hearthstone-helper'
+require 'nokogiri'
+
+class ExtractSounds
+  include HearthstoneHelper
+  def initialize
+    import_sounds
+    # import_from_unity(:src => 'cardxml0.unity3d', :inner_path => 'CAB-cardxml0/TextAsset/enUS.txt', :dest => 'cards.xml')
+  end
+
+  def import_sounds
+    import_from_unity(:src => 'spells0.unity3d', :inner_path => 'CAB-spells0/AudioClip/VO_*_{EnterPlay,Play}*.ogg', :dest => 'sounds')
+
+  end
+
+  def run
+  #   cards = get_all_cards
+  #   dist_path = File.join(@@config['distPath'], 'cards.json')
+  #   File.open(dist_path, 'w') do |file| 
+  #     file.write(JSON.pretty_generate(cards))
+  #   end
+  end
+end
+ExtractSounds.new(*ARGV).run()
