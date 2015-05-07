@@ -1,6 +1,5 @@
 {
-  "rootPath": "~/local/tmp/hearthstone/osx/src",
-  "dataPath": "./Data/OSX",
+  "dataPath": "~/local/tmp/hearthstone/osx/src/Data/OSX",
   "disunityPath": "~/local/src/disunity/",
   "knownEnumID": {
     "114": "Elite",

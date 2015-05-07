@@ -6,20 +6,35 @@ class ExtractSounds
   include HearthstoneHelper
   def initialize
     import_sounds
-    # import_from_unity(:src => 'cardxml0.unity3d', :inner_path => 'CAB-cardxml0/TextAsset/enUS.txt', :dest => 'cards.xml')
   end
 
   def import_sounds
-    import_from_unity(:src => 'spells0.unity3d', :inner_path => 'CAB-spells0/AudioClip/VO_*_{EnterPlay,Play}*.ogg', :dest => 'sounds')
+    import_from_unity(:filename => 'spells0.unity3d', :inner_path => 'CAB-spells0/AudioClip/VO_*_{EnterPlay,Play}*.ogg', :dest => 'sounds/play')
+    import_from_unity(:filename => 'spells1.unity3d', :inner_path => 'CAB-spells1/AudioClip/VO_*_{EnterPlay,Play}*.ogg', :dest => 'sounds/play')
+    import_from_unity(:filename => 'spells2.unity3d', :inner_path => 'CAB-spells2/AudioClip/VO_*_{EnterPlay,Play}*.ogg', :dest => 'sounds/play')
+  end
 
+  def get_all_play_sounds
+    Dir[tmp_path('sounds/play/*.ogg')]
+  end
+
+  def get_all_cards
+    JSON.parse(File.read(dist_path('cards.json')))
   end
 
   def run
-  #   cards = get_all_cards
-  #   dist_path = File.join(@@config['distPath'], 'cards.json')
-  #   File.open(dist_path, 'w') do |file| 
-  #     file.write(JSON.pretty_generate(cards))
-  #   end
+    cards = get_all_cards
+    tmp_sound_dir = tmp_path('sounds/play')
+    dist_sound_dir = dist_path('sounds/play')
+    FileUtils.mkdir_p(dist_sound_dir)
+
+    cards.each do |card|
+      id = card['id']
+      sound_file = Dir["#{tmp_sound_dir}/VO_#{id}_*.ogg"]
+      if sound_file[0]
+        FileUtils.copy(sound_file[0], File.join(dist_sound_dir, "#{id}.ogg"))
+      end
+    end
   end
 end
 ExtractSounds.new(*ARGV).run()

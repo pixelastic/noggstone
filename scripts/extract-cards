@@ -5,7 +5,7 @@ require 'nokogiri'
 class ExtractCards
   include HearthstoneHelper
   def initialize
-    import_from_unity(:src => 'cardxml0.unity3d', :inner_path => 'CAB-cardxml0/TextAsset/enUS.txt', :dest => 'cards.xml')
+    import_from_unity(:filename => 'cardxml0.unity3d', :inner_path => 'CAB-cardxml0/TextAsset/enUS.txt', :dest => 'cards.xml')
   end
 
   def get_all_raw_cards
