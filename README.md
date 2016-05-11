@@ -1,14 +1,14 @@
 # HS SoundQuizz
 
-The goal of this repo is to create a simple blind test app where one has to
-guess the card that makes a specific noise when coming into play.
+The initial goal of this repo was to create a simple blind test app where one
+has to guess the card that makes a specific noise when coming into play.
 
-This will be a good exercice in extracting HearthStone data.
+It finally simply turned into an exercise to extract data from HearthStone
 
 ## Note
 
 I currently play HearthStone on my Android Tablet, but as it is hearder to
-extract from an apk than it is from a Desktom app, I'm currently using the OSX
+extract from an apk than it is from a Desktop app, I'm currently using the OSX
 install files, given by a friend.
 
 ## Thanks

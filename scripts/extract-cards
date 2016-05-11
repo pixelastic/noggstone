@@ -66,8 +66,8 @@ class ExtractCards
 
   def run
     cards = get_all_cards
-    dist_path = File.join(@@config['distPath'], 'cards.json')
-    File.open(dist_path, 'w') do |file| 
+    app_path = File.join(@@config['appPath'], 'cards.json')
+    File.open(app_path, 'w') do |file| 
       file.write(JSON.pretty_generate(cards))
     end
   end

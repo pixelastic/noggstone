@@ -12,11 +12,11 @@ require 'json'
 class DownloadCardPictures
   include HearthstoneHelper
   def initialize
-    @picture_folder = File.join(@@config['distPath'], 'pictures')
+    @picture_folder = File.join(@@config['appPath'], 'pictures')
   end
 
   def get_all_ids
-    raw = JSON.parse(File.read(File.join(@@config['distPath'], 'cards.json')))
+    raw = JSON.parse(File.read(File.join(@@config['appPath'], 'cards.json')))
     raw.map! do |card|
       card['id']
     end

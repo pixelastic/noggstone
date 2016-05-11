@@ -1,6 +1,5 @@
 require 'json'
 require 'fileutils'
-require 'digest/sha1'
 
 module HearthstoneHelper
   __scriptDir = File.expand_path(File.dirname(__FILE__))
@@ -8,7 +7,7 @@ module HearthstoneHelper
   __configFile = File.join(__rootDir, 'config.json')
   # Load generic config
   @@config = JSON.parse(File.read(__configFile))
-  @@config['distPath'] = File.join(__rootDir, 'dist')
+  @@config['appPath'] = File.join(__rootDir, 'app')
   @@config['tmpPath'] = File.join(__rootDir, 'tmp')
 
   # Full path to a file in the data root dir
@@ -21,9 +20,9 @@ module HearthstoneHelper
     return File.expand_path(File.join(@@config['tmpPath'], path))
   end
   
-  # Full path to a file in the dist dir
-  def dist_path(path)
-    return File.expand_path(File.join(@@config['distPath'], path))
+  # Full path to a file in the app dir
+  def app_path(path)
+    return File.expand_path(File.join(@@config['appPath'], path))
   end
 
   # Extract a unity3d file in its own directory
